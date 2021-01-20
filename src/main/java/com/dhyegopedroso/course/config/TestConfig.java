@@ -9,11 +9,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.dhyegopedroso.course.Repositories.CategoryRepository;
+import com.dhyegopedroso.course.Repositories.OrderItemRepository;
 import com.dhyegopedroso.course.Repositories.OrderRepository;
 import com.dhyegopedroso.course.Repositories.ProductRepository;
 import com.dhyegopedroso.course.Repositories.UserRepository;
 import com.dhyegopedroso.course.entities.Category;
 import com.dhyegopedroso.course.entities.Order;
+import com.dhyegopedroso.course.entities.OrderItem;
 import com.dhyegopedroso.course.entities.Product;
 import com.dhyegopedroso.course.entities.User;
 import com.dhyegopedroso.course.entities.enums.OrderStatus;
@@ -33,6 +35,9 @@ public class TestConfig implements CommandLineRunner {
 
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -40,7 +45,6 @@ public class TestConfig implements CommandLineRunner {
 		Category cat1 = new Category(null, "Electronics");
 		Category cat2 = new Category(null, "Books");
 		Category cat3 = new Category(null, "Computers");
-
 		categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
 
 		Product p1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, "");
@@ -54,14 +58,12 @@ public class TestConfig implements CommandLineRunner {
 		p4.getCategories().add(cat3);
 		Product p5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", 100.99, "");
 		p5.getCategories().add(cat2);
-
 		productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 
 		User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", "123456");
 		User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "123456");
 		User u3 = new User(null, "Dhyego Pedroso", "dhyego.pedroso@gmail.com", "966666666", "123456");
 		User u4 = new User(null, "Enzo Meira", "enzo.meira@gmail.com", "955555555", "123456");
-
 		userRepository.saveAll(Arrays.asList(u1, u2, u3, u4));
 
 		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, u1);
@@ -73,8 +75,14 @@ public class TestConfig implements CommandLineRunner {
 		Order o7 = new Order(null, Instant.parse("2019-09-20T19:53:07Z"), OrderStatus.CANCELED, u1);
 		Order o8 = new Order(null, Instant.parse("2019-09-21T03:42:10Z"), OrderStatus.DELIVERED, u2);
 		Order o9 = new Order(null, Instant.parse("2019-10-22T15:21:22Z"), OrderStatus.SHIPPED, u4);
-
 		orderRepository.saveAll(Arrays.asList(o1, o2, o3, o4, o5, o6, o7, o8, o9));
+		
+		OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+		OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+		OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
+		OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
+		orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
+		
 
 	}
 
